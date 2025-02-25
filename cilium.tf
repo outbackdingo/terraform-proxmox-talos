@@ -8,9 +8,10 @@ locals {
       apiVersion = "cilium.io/v2alpha1"
       kind       = "CiliumL2AnnouncementPolicy"
       metadata = {
-        name = "external"
+        name = "cilium-l2-policy"
       }
       spec = {
+        externalIPs = true
         loadBalancerIPs = true
         interfaces = [
           "eth0",
@@ -29,7 +30,7 @@ locals {
       apiVersion = "cilium.io/v2alpha1"
       kind       = "CiliumLoadBalancerIPPool"
       metadata = {
-        name = "external"
+        name = "cilium-lb-pool"
       }
       spec = {
         blocks = [
@@ -98,25 +99,29 @@ data "helm_template" "cilium" {
     value = "true"
   }
   set {
+    name  = "externalIPs.enabled"
+    value = "true"
+  }  
+  set {
     name  = "devices"
     value = "{eth0}"
   }
-  set {
-    name  = "ingressController.enabled"
-    value = "true"
-  }
-  set {
-    name  = "ingressController.default"
-    value = "true"
-  }
-  set {
-    name  = "ingressController.loadbalancerMode"
-    value = "shared"
-  }
-  set {
-    name  = "ingressController.enforceHttps"
-    value = "false"
-  }
+//  set {
+//    name  = "ingressController.enabled"
+//    value = "true"
+//  }
+//  set {
+//    name  = "ingressController.default"
+//    value = "true"
+//  }
+//  set {
+//    name  = "ingressController.loadbalancerMode"
+//    value = "shared"
+//  }
+//  set {
+//    name  = "ingressController.enforceHttps"
+//    value = "false"
+//  }
   set {
     name  = "envoy.enabled"
     value = "true"

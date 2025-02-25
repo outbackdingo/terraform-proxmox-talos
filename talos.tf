@@ -148,10 +148,6 @@ data "talos_machine_configuration" "controller" {
             contents = data.helm_template.reloader.manifest
           },
           {
-            name     = "gitea"
-            contents = local.gitea_manifest
-          },
-          {
             name = "argocd"
             contents = join("---\n", [
               yamlencode({

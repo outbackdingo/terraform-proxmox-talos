@@ -3,7 +3,7 @@ set -euo pipefail
 
 # see https://github.com/siderolabs/talos/releases
 # renovate: datasource=github-releases depName=siderolabs/talos
-talos_version="1.8.3"
+talos_version="1.9.0"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/qemu-guest-agent
 # see https://github.com/siderolabs/extensions/tree/main/guest-agents/qemu-guest-agent
@@ -12,7 +12,7 @@ talos_qemu_guest_agent_extension_tag="9.1.0@sha256:cd8154036a0711f6f0a2ec9d6ce85
 # see https://github.com/siderolabs/extensions/pkgs/container/drbd
 # see https://github.com/siderolabs/extensions/tree/main/storage/drbd
 # see https://github.com/LINBIT/drbd
-talos_drbd_extension_tag="9.2.11-v1.8.3@sha256:4fab47f31d7e7d1873cc17fc46225805a424234eac73e5ff61b22419b9a496fc"
+talos_drbd_extension_tag="9.2.12-v1.9.0@sha256:209feb3c3bb5ae3a1f43b5ec9dd55be77f958dccecc3ec39d361b4f35fde3f6c"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/spin
 # see https://github.com/siderolabs/extensions/tree/main/container-runtime/spin
@@ -20,7 +20,7 @@ talos_spin_extension_tag="v0.15.1@sha256:642488eadb94d4ddb30f9e65d8ed6836a4c00d6
 
 # see https://github.com/piraeusdatastore/piraeus-operator/releases
 # renovate: datasource=github-releases depName=piraeusdatastore/piraeus-operator
-piraeus_operator_version="2.7.1"
+piraeus_operator_version="2.8.0"
 
 export CHECKPOINT_DISABLE='1'
 export TF_LOG='DEBUG' # TRACE, DEBUG, INFO, WARN or ERROR.
