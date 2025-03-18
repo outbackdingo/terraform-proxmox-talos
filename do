@@ -19,6 +19,9 @@ talos_drbd_extension_tag="9.2.12-v1.9.5@sha256:6bcdae6d6ce41ea13e13ecdd113d8ad34
 talos_spin_extension_tag="v0.18.0@sha256:5fbcbd56c276db85696ddac1a080254ba1f3ff8f5a41a36b04a4aaf4d268ab3b"
 
 talos_zerotier_extension_tag="1.14.2@sha256:d34bf0d92d2ec0d733055a5081bdffdc836f26e3e8533c2fc17afae56f1228e7"
+talos_crun__extension_tag="1.20@sha256:d4db779f305633cad3bfca1f2b096a9c0db71b1c09c7960d56d378cf119b6971"
+
+talos_kata_containers_extension_tag="3.14.0@sha256:8e61cf93a6cf86980f13dede2837171e1935e60e02abc8fe85f9cf987201799f"
 
 # see https://github.com/piraeusdatastore/piraeus-operator/releases
 # renovate: datasource=github-releases depName=piraeusdatastore/piraeus-operator
