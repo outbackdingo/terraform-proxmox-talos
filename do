@@ -3,20 +3,22 @@ set -euo pipefail
 
 # see https://github.com/siderolabs/talos/releases
 # renovate: datasource=github-releases depName=siderolabs/talos
-talos_version="1.9.0"
+talos_version="1.9.5"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/qemu-guest-agent
 # see https://github.com/siderolabs/extensions/tree/main/guest-agents/qemu-guest-agent
-talos_qemu_guest_agent_extension_tag="9.1.0@sha256:cd8154036a0711f6f0a2ec9d6ce8539219d0e46a78e0eca22598d4d884f3f52c"
+talos_qemu_guest_agent_extension_tag="9.2.2@sha256:2aadd4b258c2cf4ed4e09a3221dfb9a8207c946ed3720034fb87764ebbcc7782"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/drbd
 # see https://github.com/siderolabs/extensions/tree/main/storage/drbd
 # see https://github.com/LINBIT/drbd
-talos_drbd_extension_tag="9.2.12-v1.9.0@sha256:209feb3c3bb5ae3a1f43b5ec9dd55be77f958dccecc3ec39d361b4f35fde3f6c"
+talos_drbd_extension_tag="9.2.12-v1.9.5@sha256:6bcdae6d6ce41ea13e13ecdd113d8ad34b478aff45399d941d1815bf97593346"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/spin
 # see https://github.com/siderolabs/extensions/tree/main/container-runtime/spin
-talos_spin_extension_tag="v0.15.1@sha256:642488eadb94d4ddb30f9e65d8ed6836a4c00d699889e060019492308735af9b"
+talos_spin_extension_tag="v0.18.0@sha256:5fbcbd56c276db85696ddac1a080254ba1f3ff8f5a41a36b04a4aaf4d268ab3b"
+
+talos_zerotier_extension_tag="1.14.2@sha256:d34bf0d92d2ec0d733055a5081bdffdc836f26e3e8533c2fc17afae56f1228e7"
 
 # see https://github.com/piraeusdatastore/piraeus-operator/releases
 # renovate: datasource=github-releases depName=piraeusdatastore/piraeus-operator

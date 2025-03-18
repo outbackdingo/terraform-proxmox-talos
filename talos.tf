@@ -17,10 +17,11 @@ locals {
       #    (which we do not do). instead, its preferred to create a custom
       #    talos image, which is created in the installed state.
       #install = {}
-      network {
-        kubespan:
-            enabled: true
-        }    
+      network = {
+        kubespan = {
+            enabled = true
+        }
+      }    
       features = {
         # see https://www.talos.dev/v1.8/kubernetes-guides/configuration/kubeprism/
         # see talosctl -n $c0 read /etc/kubernetes/kubeconfig-kubelet | yq .clusters[].cluster.server
