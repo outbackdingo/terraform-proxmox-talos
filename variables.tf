@@ -12,7 +12,7 @@ variable "proxmox_pve_node_address" {
 variable "talos_version" {
   type = string
   # renovate: datasource=github-releases depName=siderolabs/talos
-  default = "1.8.3"
+  default = "1.9.4"
   validation {
     condition     = can(regex("^\\d+(\\.\\d+)+", var.talos_version))
     error_message = "Must be a version number."
@@ -24,7 +24,7 @@ variable "talos_version" {
 variable "kubernetes_version" {
   type = string
   # renovate: datasource=github-releases depName=siderolabs/kubelet
-  default = "1.31.3"
+  default = "1.32.2"
   validation {
     condition     = can(regex("^\\d+(\\.\\d+)+", var.kubernetes_version))
     error_message = "Must be a version number."
@@ -108,7 +108,7 @@ variable "controller_count" {
 
 variable "worker_count" {
   type    = number
-  default = 5
+  default = 4
   validation {
     condition     = var.worker_count >= 1
     error_message = "Must be 1 or more."

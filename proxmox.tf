@@ -85,7 +85,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
     cores = 4
   }
   memory {
-    dedicated = 4 * 1024
+    dedicated = 12 * 1024
   }
   vga {
     type = "qxl"
@@ -117,7 +117,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
     iothread     = true
     ssd          = true
     discard      = "on"
-    size         = 200
+    size         = 500
     file_format  = "raw"
   }
     disk {
@@ -126,7 +126,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
     iothread     = true
     ssd          = true
     discard      = "on"
-    size         = 200
+    size         = 500
     file_format  = "raw"
   }
     disk {
@@ -135,7 +135,7 @@ resource "proxmox_virtual_environment_vm" "worker" {
     iothread     = true
     ssd          = true
     discard      = "on"
-    size         = 200
+    size         = 500
     file_format  = "raw"
   }
   agent {
