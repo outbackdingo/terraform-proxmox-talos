@@ -40,19 +40,19 @@ variable "cert_contact_email" {
 variable "cluster_name" {
   description = "A name to provide for the Talos cluster"
   type        = string
-  default     = "optim"
+  default     = "homelab"
 }
 
 variable "cluster_vip" {
   description = "The virtual IP (VIP) address of the Kubernetes API server. Ensure it is synchronized with the 'cluster_endpoint' variable."
   type        = string
-  default     = "192.168.10.79"
+  default     = "192.168.10.250"
 }
 
 variable "cluster_endpoint" {
   description = "The virtual IP (VIP) endpoint of the Kubernetes API server. Ensure it is synchronized with the 'cluster_vip' variable."
   type        = string
-  default     = "https://192.168.10.79:6443"
+  default     = "https://192.168.10.250:6443"
 }
 
 variable "cluster_node_network_gateway" {
@@ -70,25 +70,25 @@ variable "cluster_node_network" {
 variable "cluster_node_network_first_controller_hostnum" {
   description = "The hostnum of the first controller host"
   type        = number
-  default     = 80
+  default     = 200
 }
 
 variable "cluster_node_network_first_worker_hostnum" {
   description = "The hostnum of the first worker host"
   type        = number
-  default     = 90
+  default     = 201
 }
 
 variable "cluster_node_network_load_balancer_first_hostnum" {
   description = "The hostnum of the first load balancer host"
   type        = number
-  default     = 130
+  default     = 230
 }
 
 variable "cluster_node_network_load_balancer_last_hostnum" {
   description = "The hostnum of the last load balancer host"
   type        = number
-  default     = 230
+  default     = 231
 }
 
 variable "ingress_domain" {
@@ -99,7 +99,7 @@ variable "ingress_domain" {
 
 variable "controller_count" {
   type    = number
-  default = 3
+  default = 1
   validation {
     condition     = var.controller_count >= 1
     error_message = "Must be 1 or more."
@@ -108,7 +108,7 @@ variable "controller_count" {
 
 variable "worker_count" {
   type    = number
-  default = 4
+  default = 3
   validation {
     condition     = var.worker_count >= 1
     error_message = "Must be 1 or more."
