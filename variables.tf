@@ -34,31 +34,31 @@ variable "kubernetes_version" {
 variable "cluster_name" {
   description = "A name to provide for the Talos cluster"
   type        = string
-  default     = "example"
+  default     = "devel"
 }
 
 variable "cluster_vip" {
   description = "The virtual IP (VIP) address of the Kubernetes API server. Ensure it is synchronized with the 'cluster_endpoint' variable."
   type        = string
-  default     = "192.168.1.79"
+  default     = "192.168.10.79"
 }
 
 variable "cluster_endpoint" {
   description = "The virtual IP (VIP) endpoint of the Kubernetes API server. Ensure it is synchronized with the 'cluster_vip' variable."
   type        = string
-  default     = "https://192.168.1.79:6443"
+  default     = "https://192.168.10.79:6443"
 }
 
 variable "cluster_node_network_gateway" {
   description = "The IP network gateway of the cluster nodes"
   type        = string
-  default     = "192.168.1.1"
+  default     = "192.168.10.1"
 }
 
 variable "cluster_node_network" {
   description = "The IP network of the cluster nodes"
   type        = string
-  default     = "192.168.1.0/24"
+  default     = "192.168.10.0/24"
 }
 
 variable "cluster_node_network_first_controller_hostnum" {
@@ -88,7 +88,7 @@ variable "cluster_node_network_load_balancer_last_hostnum" {
 variable "ingress_domain" {
   description = "the DNS domain of the ingress resources"
   type        = string
-  default     = "example.test"
+  default     = "optimcloud.com"
 }
 
 variable "controller_count" {
@@ -111,5 +111,5 @@ variable "worker_count" {
 
 variable "prefix" {
   type    = string
-  default = "talos-example"
+  default = "talos-devel"
 }
