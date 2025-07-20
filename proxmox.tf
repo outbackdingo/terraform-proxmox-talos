@@ -117,7 +117,25 @@ resource "proxmox_virtual_environment_vm" "worker" {
     iothread     = true
     ssd          = true
     discard      = "on"
-    size         = 60
+    size         = 256
+    file_format  = "raw"
+  }
+  disk {
+    datastore_id = "local-lvm"
+    interface    = "scsi2"
+    iothread     = true
+    ssd          = true
+    discard      = "on"
+    size         = 256
+    file_format  = "raw"
+  }
+  disk {
+    datastore_id = "local-lvm"
+    interface    = "scsi3"
+    iothread     = true
+    ssd          = true
+    discard      = "on"
+    size         = 256
     file_format  = "raw"
   }
   agent {
