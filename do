@@ -228,7 +228,8 @@ EOF
         --storage-pool lvm \
         lvm \
         "$node" \
-        /dev/sdb
+        /dev/sdb /dev/sdc /dev/sdd
+      kubectl patch storageclass linstor-lvm-r1 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
     fi
   done
 }
