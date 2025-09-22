@@ -232,6 +232,15 @@ EOF
         "$node" \
         /dev/sdb /dev/sdc /dev/sdd
       kubectl patch storageclass linstor-lvm-r1 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+      kubectl apply -f https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
+      kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+cp talosconfig.yml /home/dingo/.talos/config
+talosctl patch mc --nodes 192.168.10.82 -e 192.168.10.82 --patch @metrics.patch
+talosctl patch mc --nodes 192.168.10.81 -e 192.168.10.81 --patch @metrics.patch
+talosctl patch mc --nodes 192.168.10.80 -e 192.168.10.80 --patch @metrics.patch
+talosctl patch mc --nodes 192.168.10.90 -e 192.168.10.90 --patch @metrics.patch
+talosctl patch mc --nodes 192.168.10.91 -e 192.168.10.91 --patch @metrics.patch
+talosctl patch mc --nodes 192.168.10.92 -e 192.168.10.92 --patch @metrics.patch
     fi
   done
 }
