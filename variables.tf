@@ -8,11 +8,11 @@ variable "proxmox_pve_node_address" {
 }
 
 # see https://github.com/siderolabs/talos/releases
-# see https://www.talos.dev/v1.10/introduction/support-matrix/
+# see https://www.talos.dev/v1.8/introduction/support-matrix/
 variable "talos_version" {
   type = string
   # renovate: datasource=github-releases depName=siderolabs/talos
-  default = "1.11.1"
+  default = "1.9.5"
   validation {
     condition     = can(regex("^\\d+(\\.\\d+)+", var.talos_version))
     error_message = "Must be a version number."
@@ -20,15 +20,21 @@ variable "talos_version" {
 }
 
 # see https://github.com/siderolabs/kubelet/pkgs/container/kubelet
-# see https://www.talos.dev/v1.10/introduction/support-matrix/
+# see https://www.talos.dev/v1.8/introduction/support-matrix/
 variable "kubernetes_version" {
   type = string
   # renovate: datasource=github-releases depName=siderolabs/kubelet
-  default = "1.34.0"
+  default = "1.33.0"
   validation {
     condition     = can(regex("^\\d+(\\.\\d+)+", var.kubernetes_version))
     error_message = "Must be a version number."
   }
+}
+
+variable "cert_contact_email" {
+  description = "A name to provide for Letsencrypt"
+  type = string
+  default = "outbackdingo@gmail.com"
 }
 
 variable "cluster_name" {
@@ -40,13 +46,13 @@ variable "cluster_name" {
 variable "cluster_vip" {
   description = "The virtual IP (VIP) address of the Kubernetes API server. Ensure it is synchronized with the 'cluster_endpoint' variable."
   type        = string
-  default     = "192.168.10.79"
+  default     = "192.168.10.250"
 }
 
 variable "cluster_endpoint" {
   description = "The virtual IP (VIP) endpoint of the Kubernetes API server. Ensure it is synchronized with the 'cluster_vip' variable."
   type        = string
-  default     = "https://192.168.10.79:6443"
+  default     = "https://192.168.10.200:6443"
 }
 
 variable "cluster_node_network_gateway" {
@@ -64,25 +70,25 @@ variable "cluster_node_network" {
 variable "cluster_node_network_first_controller_hostnum" {
   description = "The hostnum of the first controller host"
   type        = number
-  default     = 80
+  default     = 200
 }
 
 variable "cluster_node_network_first_worker_hostnum" {
   description = "The hostnum of the first worker host"
   type        = number
-  default     = 90
+  default     = 205
 }
 
 variable "cluster_node_network_load_balancer_first_hostnum" {
   description = "The hostnum of the first load balancer host"
   type        = number
-  default     = 130
+  default     = 230
 }
 
 variable "cluster_node_network_load_balancer_last_hostnum" {
   description = "The hostnum of the last load balancer host"
   type        = number
-  default     = 230
+  default     = 235
 }
 
 variable "ingress_domain" {

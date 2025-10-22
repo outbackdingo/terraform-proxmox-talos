@@ -1,4 +1,4 @@
-# see https://registry.terraform.io/providers/bpg/proxmox/0.79.0/docs/resources/virtual_environment_file
+# see https://registry.terraform.io/providers/bpg/proxmox/0.84.1/docs/resources/virtual_environment_file
 resource "proxmox_virtual_environment_file" "talos" {
   datastore_id = "local"
   node_name    = var.proxmox_pve_node_name
@@ -9,7 +9,7 @@ resource "proxmox_virtual_environment_file" "talos" {
   }
 }
 
-# see https://registry.terraform.io/providers/bpg/proxmox/0.79.0/docs/resources/virtual_environment_vm
+# see https://registry.terraform.io/providers/bpg/proxmox/0.84.1/docs/resources/virtual_environment_vm
 resource "proxmox_virtual_environment_vm" "controller" {
   count           = var.controller_count
   name            = "${var.prefix}-${local.controller_nodes[count.index].name}"
@@ -67,7 +67,7 @@ resource "proxmox_virtual_environment_vm" "controller" {
   }
 }
 
-# see https://registry.terraform.io/providers/bpg/proxmox/0.79.0/docs/resources/virtual_environment_vm
+# see https://registry.terraform.io/providers/bpg/proxmox/0.84.1/docs/resources/virtual_environment_vm
 resource "proxmox_virtual_environment_vm" "worker" {
   count           = var.worker_count
   name            = "${var.prefix}-${local.worker_nodes[count.index].name}"
@@ -117,25 +117,25 @@ resource "proxmox_virtual_environment_vm" "worker" {
     iothread     = true
     ssd          = true
     discard      = "on"
-    size         = 256
+    size         = 500
     file_format  = "raw"
   }
-  disk {
+    disk {
     datastore_id = "local-lvm"
     interface    = "scsi2"
     iothread     = true
     ssd          = true
     discard      = "on"
-    size         = 256
+    size         = 500
     file_format  = "raw"
   }
-  disk {
+    disk {
     datastore_id = "local-lvm"
     interface    = "scsi3"
     iothread     = true
     ssd          = true
     discard      = "on"
-    size         = 256
+    size         = 500
     file_format  = "raw"
   }
   agent {

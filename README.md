@@ -17,7 +17,7 @@ Install terraform:
 ```bash
 # see https://github.com/hashicorp/terraform/releases
 # renovate: datasource=github-releases depName=hashicorp/terraform
-terraform_version='1.13.2'
+terraform_version='1.13.3'
 wget "https://releases.hashicorp.com/terraform/$terraform_version/terraform_${$terraform_version}_linux_amd64.zip"
 unzip "terraform_${$terraform_version}_linux_amd64.zip"
 sudo install terraform /usr/local/bin
@@ -53,7 +53,7 @@ Install talosctl:
 ```bash
 # see https://github.com/siderolabs/talos/releases
 # renovate: datasource=github-releases depName=siderolabs/talos
-talos_version='1.10.7'
+talos_version='1.11.2'
 wget https://github.com/siderolabs/talos/releases/download/v$talos_version/talosctl-linux-amd64
 sudo install talosctl-linux-amd64 /usr/local/bin/talosctl
 rm talosctl-linux-amd64
@@ -63,7 +63,7 @@ Set your Proxmox details:
 
 ```bash
 # see https://registry.terraform.io/providers/bpg/proxmox/latest/docs#argument-reference
-# see environment variables at https://github.com/bpg/terraform-provider-proxmox/blob/v0.83.2/proxmoxtf/provider/provider.go#L52-L61
+# see environment variables at https://github.com/bpg/terraform-provider-proxmox/blob/v0.84.1/proxmoxtf/provider/provider.go#L52-L61
 cat >secrets-proxmox.sh <<EOF
 unset HTTPS_PROXY
 #export HTTPS_PROXY='http://localhost:8080'
@@ -427,7 +427,7 @@ Update the talos extensions to match the talos version:
 Talos:
 
 ```bash
-# see https://www.talos.dev/v1.10/advanced/troubleshooting-control-plane/
+# see https://www.talos.dev/v1.11/advanced/troubleshooting-control-plane/
 talosctl -n $all support && rm -rf support && 7z x -osupport support.zip && code support
 talosctl -n $c0 service ext-qemu-guest-agent status
 talosctl -n $c0 service etcd status

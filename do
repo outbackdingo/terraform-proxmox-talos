@@ -3,18 +3,16 @@ set -euo pipefail
 
 # see https://github.com/siderolabs/talos/releases
 # renovate: datasource=github-releases depName=siderolabs/talos
-talos_version="1.11.1"
+talos_version="1.11.2"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/qemu-guest-agent
 # see https://github.com/siderolabs/extensions/tree/main/guest-agents/qemu-guest-agent
-talos_qemu_guest_agent_extension_tag="10.1.0@sha256:b62871218726c51b0c618e509ebcf7448a478f7cbf8193ae490583fea040aaae"
+talos_qemu_guest_agent_extension_tag="10.0.2@sha256:9720300de00544eca155bc19369dfd7789d39a0e23d72837a7188f199e13dc6c"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/drbd
 # see https://github.com/siderolabs/extensions/tree/main/storage/drbd
 # see https://github.com/LINBIT/drbd
-#talos_drbd_extension_tag="9.2.14-v1.10.7@sha256:1c54ef1d97d5eacb3de749aac198d5313cc3513ca348e994c6c080a3bf2440eb"
-
-talos_drbd_extension_tag="9.2.14-v1.11.1@sha256:004b24fc5d3d41369a7f016d10e894436293d8478debfa769e204522e7cc0925"
+talos_drbd_extension_tag="9.2.14-v1.11.2@sha256:4e8a32cbff6d96c6a61e523636f7c11f5a72984097e3e4a68f9f5354ac070b99"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/spin
 # see https://github.com/siderolabs/extensions/tree/main/container-runtime/spin
@@ -22,7 +20,7 @@ talos_spin_extension_tag="v0.21.0@sha256:b405524de2a2826b22354962d48688237ff4f5f
 
 # see https://github.com/piraeusdatastore/piraeus-operator/releases
 # renovate: datasource=github-releases depName=piraeusdatastore/piraeus-operator
-piraeus_operator_version="2.9.0"
+piraeus_operator_version="2.9.1"
 
 export CHECKPOINT_DISABLE='1'
 export TF_LOG='DEBUG' # TRACE, DEBUG, INFO, WARN or ERROR.
@@ -61,9 +59,9 @@ function update-talos-extensions {
 }
 
 function build_talos_image {
-  # see https://www.talos.dev/v1.10/talos-guides/install/boot-assets/
-  # see https://www.talos.dev/v1.10/advanced/metal-network-configuration/
-  # see Profile type at https://github.com/siderolabs/talos/blob/v1.10.7/pkg/imager/profile/profile.go#L23-L46
+  # see https://www.talos.dev/v1.11/talos-guides/install/boot-assets/
+  # see https://www.talos.dev/v1.11/advanced/metal-network-configuration/
+  # see Profile type at https://github.com/siderolabs/talos/blob/v1.11.2/pkg/imager/profile/profile.go#L23-L46
   local talos_version_tag="v$talos_version"
   rm -rf tmp/talos
   mkdir -p tmp/talos
@@ -144,21 +142,46 @@ function health {
 
 function piraeus-install {
   # see https://github.com/piraeusdatastore/piraeus-operator
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.0/docs/how-to/talos.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.0/docs/tutorial/get-started.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.0/docs/tutorial/replicated-volumes.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.0/docs/explanation/components.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.0/docs/reference/linstorsatelliteconfiguration.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.0/docs/reference/linstorcluster.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/how-to/talos.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/tutorial/get-started.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/tutorial/replicated-volumes.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/explanation/components.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/reference/linstorsatelliteconfiguration.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/reference/linstorcluster.md
   # see https://linbit.com/drbd-user-guide/linstor-guide-1_0-en/
   # see https://linbit.com/drbd-user-guide/linstor-guide-1_0-en/#ch-kubernetes
   # see 5.7.1. Available Parameters in a Storage Class at https://linbit.com/drbd-user-guide/linstor-guide-1_0-en/#s-kubernetes-sc-parameters
   # see https://linbit.com/drbd-user-guide/drbd-guide-9_0-en/
-  # see https://www.talos.dev/v1.10/kubernetes-guides/configuration/storage/#piraeus--linstor
+  # see https://www.talos.dev/v1.11/kubernetes-guides/configuration/storage/#piraeus--linstor
   step 'piraeus install'
   kubectl apply --server-side -k "https://github.com/piraeusdatastore/piraeus-operator//config/default?ref=v$piraeus_operator_version"
   step 'piraeus wait'
   kubectl wait pod --timeout=15m --for=condition=Ready -n piraeus-datastore -l app.kubernetes.io/component=piraeus-operator
+  # wait until the webhook endpoint is available.
+  # NB this is required to workaround:
+  #   Error from server (InternalError): error when creating "STDIN": Internal error occurred: failed calling webhook "vlinstorsatelliteconfiguration.kb.io": failed to call webhook: Post "https://piraeus-operator-webhook-service.piraeus-datastore.svc:443/validate-piraeus-io-v1-linstorsatelliteconfiguration?timeout=10s": dial tcp 10.97.116.20:443: connect: operation not permitted
+  while [ \
+    "$(
+      kubectl \
+      run \
+      test-piraeus-webhook \
+      --namespace piraeus-datastore \
+      --restart Never \
+      --rm \
+      --wait \
+      --stdin \
+      --tty \
+      --image alpine/curl:8.14.1 \
+      -- \
+      curl \
+        --insecure \
+        --silent \
+        --fail-with-body \
+        --header content-type:application/json \
+        https://piraeus-operator-webhook-service.piraeus-datastore:443/validate-piraeus-io-v1-linstorsatelliteconfiguration?timeout=5s \
+        | head -1 | jq .response.status.code
+    )" != "400" \
+  ]; do sleep 5; done
   step 'piraeus configure'
   kubectl apply -n piraeus-datastore -f - <<'EOF'
 apiVersion: piraeus.io/v1
@@ -231,16 +254,6 @@ EOF
         lvm \
         "$node" \
         /dev/sdb /dev/sdc /dev/sdd
-      kubectl patch storageclass linstor-lvm-r1 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
-      kubectl apply -f https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml
-      kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-cp talosconfig.yml /home/dingo/.talos/config
-talosctl patch mc --nodes 192.168.10.82 -e 192.168.10.82 --patch @metrics.patch
-talosctl patch mc --nodes 192.168.10.81 -e 192.168.10.81 --patch @metrics.patch
-talosctl patch mc --nodes 192.168.10.80 -e 192.168.10.80 --patch @metrics.patch
-talosctl patch mc --nodes 192.168.10.90 -e 192.168.10.90 --patch @metrics.patch
-talosctl patch mc --nodes 192.168.10.91 -e 192.168.10.91 --patch @metrics.patch
-talosctl patch mc --nodes 192.168.10.92 -e 192.168.10.92 --patch @metrics.patch
     fi
   done
 }
