@@ -3,24 +3,24 @@ set -euo pipefail
 
 # see https://github.com/siderolabs/talos/releases
 # renovate: datasource=github-releases depName=siderolabs/talos
-talos_version="1.11.2"
+talos_version="1.12.2"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/qemu-guest-agent
 # see https://github.com/siderolabs/extensions/tree/main/guest-agents/qemu-guest-agent
-talos_qemu_guest_agent_extension_tag="10.0.2@sha256:9720300de00544eca155bc19369dfd7789d39a0e23d72837a7188f199e13dc6c"
+talos_qemu_guest_agent_extension_tag="10.2.0@sha256:6bc166eab4b5f1b88c4ddece0a898c6aee4bf9e3dcb8f97917ae0fc204b6242e"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/drbd
 # see https://github.com/siderolabs/extensions/tree/main/storage/drbd
 # see https://github.com/LINBIT/drbd
-talos_drbd_extension_tag="9.2.14-v1.11.2@sha256:4e8a32cbff6d96c6a61e523636f7c11f5a72984097e3e4a68f9f5354ac070b99"
+talos_drbd_extension_tag="9.2.16-v1.12.2@sha256:bb5990d568a1931997f5f87c5d50b862122aff4868e1958e74f787d8abf401db"
 
 # see https://github.com/siderolabs/extensions/pkgs/container/spin
 # see https://github.com/siderolabs/extensions/tree/main/container-runtime/spin
-talos_spin_extension_tag="v0.21.0@sha256:b405524de2a2826b22354962d48688237ff4f5f7cf79f80c27d08f057c51b505"
+talos_spin_extension_tag="v0.22.0@sha256:823c3b673011e14db0afa3c8bf259f9438b3e1a9cd6ef82f3c6a73b792c392fb"
 
 # see https://github.com/piraeusdatastore/piraeus-operator/releases
 # renovate: datasource=github-releases depName=piraeusdatastore/piraeus-operator
-piraeus_operator_version="2.9.1"
+piraeus_operator_version="2.10.4"
 
 export CHECKPOINT_DISABLE='1'
 export TF_LOG='DEBUG' # TRACE, DEBUG, INFO, WARN or ERROR.
@@ -59,9 +59,9 @@ function update-talos-extensions {
 }
 
 function build_talos_image {
-  # see https://www.talos.dev/v1.11/talos-guides/install/boot-assets/
-  # see https://www.talos.dev/v1.11/advanced/metal-network-configuration/
-  # see Profile type at https://github.com/siderolabs/talos/blob/v1.11.2/pkg/imager/profile/profile.go#L23-L46
+  # see https://docs.siderolabs.com/talos/v1.12/platform-specific-installations/boot-assets
+  # see https://docs.siderolabs.com/talos/v1.12/platform-specific-installations/bare-metal-platforms/network-config
+  # see Profile type at https://github.com/siderolabs/talos/blob/v1.12.2/pkg/imager/profile/profile.go#L24-L47
   local talos_version_tag="v$talos_version"
   rm -rf tmp/talos
   mkdir -p tmp/talos
@@ -142,17 +142,17 @@ function health {
 
 function piraeus-install {
   # see https://github.com/piraeusdatastore/piraeus-operator
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/how-to/talos.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/tutorial/get-started.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/tutorial/replicated-volumes.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/explanation/components.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/reference/linstorsatelliteconfiguration.md
-  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.9.1/docs/reference/linstorcluster.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.10.4/docs/how-to/talos.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.10.4/docs/tutorial/get-started.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.10.4/docs/tutorial/replicated-volumes.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.10.4/docs/explanation/components.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.10.4/docs/reference/linstorsatelliteconfiguration.md
+  # see https://github.com/piraeusdatastore/piraeus-operator/blob/v2.10.4/docs/reference/linstorcluster.md
   # see https://linbit.com/drbd-user-guide/linstor-guide-1_0-en/
   # see https://linbit.com/drbd-user-guide/linstor-guide-1_0-en/#ch-kubernetes
   # see 5.7.1. Available Parameters in a Storage Class at https://linbit.com/drbd-user-guide/linstor-guide-1_0-en/#s-kubernetes-sc-parameters
   # see https://linbit.com/drbd-user-guide/drbd-guide-9_0-en/
-  # see https://www.talos.dev/v1.11/kubernetes-guides/configuration/storage/#piraeus--linstor
+  # see https://docs.siderolabs.com/kubernetes-guides/csi/storage#piraeus-%2F-linstor
   step 'piraeus install'
   kubectl apply --server-side -k "https://github.com/piraeusdatastore/piraeus-operator//config/default?ref=v$piraeus_operator_version"
   step 'piraeus wait'
@@ -275,9 +275,10 @@ function info {
   for n in "${nodes[@]}"; do
     # NB there can be multiple machineconfigs in a machine. we only want to see
     #    the ones with an id that looks like a version tag.
+    # NB machineconfigs.spec is a multi-document yaml.
     talosctl -n $n get machineconfigs -o json \
       | jq -r 'select(.metadata.id | test("v\\d+")) | .spec' \
-      | yq -r '.machine.install.image' \
+      | yq -r '.machine.install.image | select(.)' \
       | sed -E "s,(.+),$n: \1,g"
   done
   step 'talos node os-release'

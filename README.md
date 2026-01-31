@@ -10,14 +10,14 @@ An example [Talos Linux](https://www.talos.dev) Kubernetes cluster in Proxmox QE
 
 The [spin extension](https://github.com/siderolabs/extensions/tree/main/container-runtime/spin), which installs [containerd-shim-spin](https://github.com/spinkube/containerd-shim-spin), is used to provide the ability to run [Spin Applications](https://developer.fermyon.com/spin/v2/index) ([WebAssembly/Wasm](https://webassembly.org/)).
 
-# Usage (Ubuntu 22.04 host)
+# Usage (Ubuntu 24.04 host)
 
 Install terraform:
 
 ```bash
 # see https://github.com/hashicorp/terraform/releases
 # renovate: datasource=github-releases depName=hashicorp/terraform
-terraform_version='1.13.3'
+terraform_version='1.14.3'
 wget "https://releases.hashicorp.com/terraform/$terraform_version/terraform_${$terraform_version}_linux_amd64.zip"
 unzip "terraform_${$terraform_version}_linux_amd64.zip"
 sudo install terraform /usr/local/bin
@@ -29,7 +29,7 @@ Install cilium cli:
 ```bash
 # see https://github.com/cilium/cilium-cli/releases
 # renovate: datasource=github-releases depName=cilium/cilium-cli
-cilium_version='0.18.7'
+cilium_version='0.19.0'
 cilium_url="https://github.com/cilium/cilium-cli/releases/download/v$cilium_version/cilium-linux-amd64.tar.gz"
 wget -O- "$cilium_url" | tar xzf - cilium
 sudo install cilium /usr/local/bin/cilium
@@ -41,7 +41,7 @@ Install cilium hubble:
 ```bash
 # see https://github.com/cilium/hubble/releases
 # renovate: datasource=github-releases depName=cilium/hubble
-hubble_version='1.18.0'
+hubble_version='1.18.5'
 hubble_url="https://github.com/cilium/hubble/releases/download/v$hubble_version/hubble-linux-amd64.tar.gz"
 wget -O- "$hubble_url" | tar xzf - hubble
 sudo install hubble /usr/local/bin/hubble
@@ -53,7 +53,7 @@ Install talosctl:
 ```bash
 # see https://github.com/siderolabs/talos/releases
 # renovate: datasource=github-releases depName=siderolabs/talos
-talos_version='1.11.2'
+talos_version='1.12.2'
 wget https://github.com/siderolabs/talos/releases/download/v$talos_version/talosctl-linux-amd64
 sudo install talosctl-linux-amd64 /usr/local/bin/talosctl
 rm talosctl-linux-amd64
@@ -63,7 +63,7 @@ Set your Proxmox details:
 
 ```bash
 # see https://registry.terraform.io/providers/bpg/proxmox/latest/docs#argument-reference
-# see environment variables at https://github.com/bpg/terraform-provider-proxmox/blob/v0.84.1/proxmoxtf/provider/provider.go#L52-L61
+# see environment variables at https://github.com/bpg/terraform-provider-proxmox/blob/v0.93.0/proxmoxtf/provider/provider.go#L52-L61
 cat >secrets-proxmox.sh <<EOF
 unset HTTPS_PROXY
 #export HTTPS_PROXY='http://localhost:8080'
@@ -146,7 +146,7 @@ Execute the [example hello-etcd stateful application](https://github.com/rgl/hel
 ```bash
 # see https://github.com/rgl/hello-etcd/tags
 # renovate: datasource=github-tags depName=rgl/hello-etcd
-hello_etcd_version='0.0.5'
+hello_etcd_version='0.0.7'
 rm -rf tmp/hello-etcd
 install -d tmp/hello-etcd
 pushd tmp/hello-etcd
@@ -249,7 +249,7 @@ gitea_url="https://$gitea_fqdn"
 echo "gitea_url: $gitea_url"
 echo "gitea_username: gitea"
 echo "gitea_password: gitea"
-curl --resolve "$gitea_fqdn:443:$gitea_ip" "$gitea_url"
+curl --resolve "$gitea_fqdn:443:$gitea_ip" --silent "$gitea_url" | grep -P '<title>'
 echo "$gitea_ip $gitea_fqdn" | sudo tee -a /etc/hosts
 xdg-open "$gitea_url"
 ```
@@ -427,7 +427,7 @@ Update the talos extensions to match the talos version:
 Talos:
 
 ```bash
-# see https://www.talos.dev/v1.11/advanced/troubleshooting-control-plane/
+# see https://docs.siderolabs.com/talos/v1.12/troubleshooting/troubleshooting
 talosctl -n $all support && rm -rf support && 7z x -osupport support.zip && code support
 talosctl -n $c0 service ext-qemu-guest-agent status
 talosctl -n $c0 service etcd status
@@ -441,10 +441,13 @@ talosctl -n $c0 get members
 talosctl -n $c0 health --control-plane-nodes $controllers --worker-nodes $workers
 talosctl -n $c0 inspect dependencies | dot -Tsvg >c0.svg && xdg-open c0.svg
 talosctl -n $c0 dashboard
+talosctl -n $c0 logs kernel
 talosctl -n $c0 logs controller-runtime
 talosctl -n $c0 logs kubelet
-talosctl -n $c0 disks
 talosctl -n $c0 mounts | sort
+talosctl -n $c0 get blockdevices
+talosctl -n $c0 get disks
+talosctl -n $c0 get systemdisk
 talosctl -n $c0 get resourcedefinitions
 talosctl -n $c0 get machineconfigs -o yaml
 talosctl -n $c0 get staticpods -o yaml
@@ -466,6 +469,7 @@ talosctl -n $w0 read /proc/modules | sort
 talosctl -n $w0 read /sys/module/drbd/parameters/usermode_helper
 talosctl -n $c0 read /etc/os-release
 talosctl -n $c0 read /etc/resolv.conf
+talosctl -n $c0 read /etc/hosts
 talosctl -n $c0 read /etc/containerd/config.toml
 talosctl -n $c0 read /etc/cri/containerd.toml
 talosctl -n $c0 read /etc/cri/conf.d/cri.toml

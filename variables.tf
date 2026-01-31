@@ -7,24 +7,22 @@ variable "proxmox_pve_node_address" {
   type = string
 }
 
-# see https://github.com/siderolabs/talos/releases
-# see https://www.talos.dev/v1.8/introduction/support-matrix/
+# see https://docs.siderolabs.com/talos/v1.12/getting-started/support-matrix
 variable "talos_version" {
   type = string
   # renovate: datasource=github-releases depName=siderolabs/talos
-  default = "1.9.5"
+  default = "1.12.2"
   validation {
     condition     = can(regex("^\\d+(\\.\\d+)+", var.talos_version))
     error_message = "Must be a version number."
   }
 }
 
-# see https://github.com/siderolabs/kubelet/pkgs/container/kubelet
-# see https://www.talos.dev/v1.8/introduction/support-matrix/
+# see https://docs.siderolabs.com/talos/v1.12/getting-started/support-matrix
 variable "kubernetes_version" {
   type = string
   # renovate: datasource=github-releases depName=siderolabs/kubelet
-  default = "1.33.0"
+  default = "1.35.0"
   validation {
     condition     = can(regex("^\\d+(\\.\\d+)+", var.kubernetes_version))
     error_message = "Must be a version number."
