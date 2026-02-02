@@ -64,7 +64,7 @@ data "helm_template" "gitea" {
   ]
   values = [yamlencode({
     valkey-cluster = {
-      enabled = false
+      enabled = true
     }
     valkey = {
       enabled = false
@@ -73,7 +73,7 @@ data "helm_template" "gitea" {
       enabled = false
     }
     postgresql-ha = {
-      enabled = false
+      enabled = true
     }
     persistence = {
       enabled      = true
@@ -83,7 +83,7 @@ data "helm_template" "gitea" {
     gitea = {
       config = {
         database = {
-          DB_TYPE = "sqlite3"
+          DB_TYPE = "postgresql"
         }
         session = {
           PROVIDER = "memory"

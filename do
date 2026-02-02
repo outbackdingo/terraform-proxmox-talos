@@ -259,7 +259,7 @@ EOF
         --storage-pool lvm \
         lvm \
         "$node" \
-        /dev/sdb
+        /dev/sdb /dev/sdc /dev/sdd
     fi
   done
 }

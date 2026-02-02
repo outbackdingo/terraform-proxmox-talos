@@ -27,7 +27,7 @@ resource "proxmox_virtual_environment_vm" "controller" {
     cores = 4
   }
   memory {
-    dedicated = 4 * 1024
+    dedicated = 8 * 1024
   }
   vga {
     type = "qxl"
@@ -82,10 +82,10 @@ resource "proxmox_virtual_environment_vm" "worker" {
   }
   cpu {
     type  = "host"
-    cores = 4
+    cores = 8
   }
   memory {
-    dedicated = 4 * 1024
+    dedicated = 16 * 1024
   }
   vga {
     type = "qxl"
@@ -117,7 +117,25 @@ resource "proxmox_virtual_environment_vm" "worker" {
     iothread     = true
     ssd          = true
     discard      = "on"
-    size         = 60
+    size         = 500
+    file_format  = "raw"
+  }
+    disk {
+    datastore_id = "local-lvm"
+    interface    = "scsi2"
+    iothread     = true
+    ssd          = true
+    discard      = "on"
+    size         = 500
+    file_format  = "raw"
+  }
+    disk {
+    datastore_id = "local-lvm"
+    interface    = "scsi3"
+    iothread     = true
+    ssd          = true
+    discard      = "on"
+    size         = 500
     file_format  = "raw"
   }
   agent {
